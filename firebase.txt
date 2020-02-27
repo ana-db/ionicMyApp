@@ -1,0 +1,42 @@
+
+En la consola de FIREBASE > DATABASES > RULES 
+
+  poner a true la regla
+
+database.rules.json 
+
+   poner a TRUE todo
+
+
+AppComponent
+
+   import * as firebase from 'firebase';
+
+    const firebaseConfig = {
+      apiKey: jjj
+      authDomain: jjc0d3b.firebaseapp.com",
+      databaseURL: jjjc0d3b.firebaseio.com",
+      projectId: jjc0d3b",
+      storageBucket: jjc0d3b.appspot.com",
+      messagingSenderId: jjj
+      appId: j
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+
+Cualquier componete llamar a firestorage para conseguir la coleccion
+
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
+
+    firebase.firestore().collection('tareas').get()
+      .then(
+        data => {
+          console.debug(data);
+      }).catch(
+        e => {
+          console.warn(e);
+      });
+
+
