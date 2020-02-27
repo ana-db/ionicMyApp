@@ -30,3 +30,16 @@ ion-menu-button {
 ion-content ion-toolbar {
   --background: transparent;
 }
+
+.tachado{
+  text-decoration: line-through;
+  color: grey;
+}
+
+li{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid grey;
+}

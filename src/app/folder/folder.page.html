@@ -15,7 +15,17 @@
   </ion-header>
 
   <div id="container">
-    <strong class="capitalize">{{ folder }}</strong>
-    <p>Explore <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+
+    <!-- List of Text Items -->
+    <ion-list>
+      <li *ngFor="let t of tareas">
+        <ion-checkbox (click)="modificar($event, t)" checked="{{t.completado}}" 
+
+color="primary"></ion-checkbox>
+        <ion-label class="{{ (t.completado) ? 'tachado' : '' }}">{{t.nombre}}</ion-label>
+        <ion-icon (click)="eliminar($event, t)" name="trash-outline"></ion-icon>
+      </li>
+    </ion-list>
+
   </div>
 </ion-content>

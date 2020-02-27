@@ -1,0 +1,212 @@
+27/02/2020
+
+https://ionicframework.com/getting-started
+
+
+------------------------
+
+https://ionicframework.com/docs/native/firebase
+
+npm i -g cordova
+
+ionic cordova plugin add cordova-plugin-firebase
+npm install @ionic-native/firebase
+
+
+
+
+
+npm install -g firebase-tools
+
+
+
+--------------------------------------------
+app.component.ts
+import { Component, OnInit } from '@angular/core';
+
+import { Platform } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
+
+@Component({
+  selector: 'app-root',
+  templateUrl: 'app.component.html',
+  styleUrls: ['app.component.scss']
+})
+export class AppComponent implements OnInit {
+  public selectedIndex = 0;
+  public appPages = [
+    {
+      title: 'Tareas',
+      url: '/folder/Tareas',
+      icon: 'list'
+    },
+    {
+      title: 'Outbox',
+      url: '/folder/Outbox',
+      icon: 'paper-plane'
+    }
+  ];
+  public labels = ['Family', 'Friends', 'Notes', 'Work', 'Travel', 'Reminders'];
+
+  constructor(
+    private platform: Platform,
+    private splashScreen: SplashScreen,
+    private statusBar: StatusBar
+  ) {
+    this.initializeApp();
+  }
+
+  initializeApp() {
+    this.platform.ready().then(() => {
+      this.statusBar.styleDefault();
+      this.splashScreen.hide();
+    });
+  }
+
+  ngOnInit() {
+    const path = window.location.pathname.split('folder/')[1];
+    if (path !== undefined) {
+      this.selectedIndex = this.appPages.findIndex(page => page.title.toLowerCase() === path.toLowerCase());
+    }
+  }
+}
+
+
+---------------------
+
+
+
+folder.page.html:
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ folder }}</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">{{ folder }}</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div id="container">
+
+    <!-- List of Text Items -->
+    <ion-list>
+      <li *ngFor="let t of tareas">
+        <ion-checkbox (click)="modificar($event, t)" checked="{{t.completado}}" color="primary"></ion-checkbox>
+        <ion-label class="{{ (t.completado) ? 'tachado' : '' }}">{{t.nombre}}</ion-label>
+        <ion-icon (click)="eliminar($event, t)" name="trash-outline"></ion-icon>
+      </li>
+    </ion-list>
+
+  </div>
+</ion-content>
+
+-----
+
+folder.page.ts:
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+
+@Component({
+  selector: 'app-folder',
+  templateUrl: './folder.page.html',
+  styleUrls: ['./folder.page.scss'],
+})
+export class FolderPage implements OnInit {
+
+  public folder: string;
+  tareas: Array<any>;
+
+  constructor(private activatedRoute: ActivatedRoute) { 
+    console.trace('FolderPageModule constructor');
+    this.tareas = [
+      {
+        'id': 0,
+        'nombre': 'Primera tarea',
+        'completado': true
+      },
+      {
+        'id': 1,
+        'nombre': 'Segunda tarea',
+        'completado': false
+      },
+      {
+        'id': 2,
+        'nombre': 'Tercera tarea',
+        'completado': false
+      }
+    ]
+  }
+
+  ngOnInit() {
+    this.folder = this.activatedRoute.snapshot.paramMap.get('id');
+  }
+
+  modificar(tarea : any){
+    console.trace('FolderPageModule modificar');
+    tarea.completado = !tarea.completado
+  }
+
+  eliminar(tarea : any){
+    console.trace('FolderPageModule eliminar');
+    if( confirm("¿Estás seguro de que quieres eliminar la tarea?") ){
+
+    }else{
+      console.trace('Eliminación cancelada');
+    }
+  }
+
+}//fin FolderPageModule
+
+-----
+
+folder.page.scss:
+añadir: 
+
+.tachado{
+  text-decoration: line-through;
+  color: grey;
+}
+
+li{
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid grey;
+}
+
+
+
+
+------
+
+app.component.html
+
+<ion-app>
+  <ion-split-pane contentId="main-content">
+    <ion-menu contentId="main-content" type="overlay">
+      <ion-content>
+        <ion-list id="inbox-list">
+          <ion-list-header>AppTareas</ion-list-header>
+
+          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages; let i = index">
+            <ion-item (click)="selectedIndex = i" routerDirection="root" [routerLink]="[p.url]" lines="none" detail="false" [class.selected]="selectedIndex == i">
+              <ion-icon slot="start" [ios]="p.icon + '-outline'" [md]="p.icon + '-sharp'"></ion-icon>
+              <ion-label>{{ p.title }}</ion-label>
+            </ion-item>
+          </ion-menu-toggle>
+        </ion-list>
+
+      </ion-content>
+    </ion-menu>
+    <ion-router-outlet id="main-content"></ion-router-outlet>
+  </ion-split-pane>
+</ion-app>
