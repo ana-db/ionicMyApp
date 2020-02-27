@@ -30,10 +30,19 @@ Cualquier componete llamar a firestorage para conseguir la coleccion
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 
-    firebase.firestore().collection('tareas').get()
+ firebase.firestore().collection('tareas').get()
       .then(
-        data => {
-          console.debug(data);
+        querySnapshot => {
+
+          querySnapshot.docs.forEach ( doc => {
+
+            console.log( 'data id %s' , doc.id );
+            console.log ('data %o', doc.data() );
+
+          });
+
+         // this.tareas = doc.data();
+
       }).catch(
         e => {
           console.warn(e);
